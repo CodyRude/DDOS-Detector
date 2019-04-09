@@ -70,7 +70,7 @@ filter_ip_hits = ip_hits_windowed.where(ip_hits_windowed['count'] >= COUNTS_CUTO
 
 # Start query stream, and write results out to a folder
 query = filter_ip_hits.select("IP").writeStream \
-    .format("csv") \
+    .format("text") \
     .option("checkpointLocation", CHECKPOINT_FOLDER) \
     .option("path", RESULTS_FOLDER) \
     .start()

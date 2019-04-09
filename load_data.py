@@ -18,12 +18,13 @@ data_type = pyspark.sql.types.StructField("value", pyspark.sql.types.StringType(
 schema = pyspark.sql.types.StructType([data_type])
 
 # Read in data
-log_df = sparksession.read.csv(FILENAME, schema=schema)
+log_df = sparksession.read.text(FILENAME)
 log_df = log_df.withColumn("key", pyspark.sql.functions.monotonically_increasing_id().cast("string"))
 
-# Parse timestamps. This is done so that the logs look like they are occuring in real time
-# If all the logs are dumped into kafka at once, there will be no output in the ddos detector
-# until more data is given. Since we only have limited data, it must not be put in all at once.
+# Parse timestamps. These are used to slow down input to kafka. If all
+# the logs are dumped into kafka at once, there will be no output in
+# the ddos detector until more data is given. Since we only have
+# limited data, it must not be put in all at once.
 string_time_col = pyspark.sql.functions.regexp_extract(log_df['value'], '\[(.*)\]', 1).alias("TimestampString")
 log_df = log_df.withColumn("Timestamp", pyspark.sql.functions.to_timestamp(string_time_col, "dd/MMM/yyyy:HH:mm:ss Z"))
 
