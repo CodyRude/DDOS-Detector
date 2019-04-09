@@ -76,4 +76,4 @@ query = filter_ip_hits.select("IP").writeStream \
     .start()
 
 # Wait for termination
-query.awaitTermination();
+query.awaitTermination()
