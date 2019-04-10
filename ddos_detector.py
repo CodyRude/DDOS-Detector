@@ -60,8 +60,8 @@ parsed_df = df.select(ip_col, time_col)
 
 # Count number of requests within a sliding window
 ip_hits_windowed = parsed_df \
-    .withWatermark("Timestamp", WATERMARK_TIME). \
-    groupBy("IP", pyspark.sql.functions.window("Timestamp", WINDOW_LENGTH, SLIDING_LEGNTH)) \
+    .withWatermark("Timestamp", WATERMARK_TIME) \
+    .groupBy("IP", pyspark.sql.functions.window("Timestamp", WINDOW_LENGTH, SLIDING_LEGNTH)) \
     .count()
 
 # Filter data so only offenders are selected
